@@ -18,7 +18,7 @@ import { FormEvent, useEffect, useState, useTransition } from "react"
 import { auth } from "@/lib/firebase/firebase"
 import { CircularProgress } from "@mui/material"
 
-function OtpLogin() {
+export default function PhoneLogin() {
   const router = useRouter()
   const [phoneNumber, setPhoneNumber] = useState("")
   const [otp, setOtp] = useState("")
@@ -165,5 +165,3 @@ function OtpLogin() {
     </div>
   )
 }
-
-export default OtpLogin
