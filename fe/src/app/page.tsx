@@ -1,4 +1,4 @@
-// 'use client'
+'use client'
 
 // import { Auth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 // import { auth } from '@/lib/firebase/firebase'
