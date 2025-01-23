@@ -10,7 +10,10 @@ export default {
   theme: {
   	extend: {
   		colors: {
-				ottSidebarBackground: "#2B518E",
+				myPrimary: "#F26B42",
+				myPrimaryHover: "#f55525",
+				mySecondary: "#2B518E",
+				mySecondaryHover: "#14428c",
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

@@ -37,6 +37,7 @@
     "npm": "^11.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-international-phone": "^4.5.0",
     "react-phone-input-2": "^2.15.1",
     "react-phone-number-input": "^3.4.11",
     "react-redux": "^9.2.0",
