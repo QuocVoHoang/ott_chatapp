@@ -1,41 +1,6 @@
 'use client'
-
-// import { Auth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
-// import { auth } from '@/lib/firebase/firebase'
-// import SideBar from "@/components/SideBar/SideBar";
-
-// export default function Home() {
-  
-//   const signinHandler = async(auth: Auth, email: string, password: string) => {
-//     console.log("SIGN IN")
-//     signInWithEmailAndPassword(auth, email, password)
-//     .then((userCredential) => {
-//       const user = userCredential.user;
-//     })
-//     .catch((error) => {
-//       const errorCode = error.code;
-//       const errorMessage = error.message;
-//     });
-//   }
-
-//   const signoutHandler = async() => {
-//     signOut(auth).then(() => {console.log('USER SIGNED OUT')}).catch((error) => {console.error(error)});
-//   }
-
-
-//   return (
-//     <div className="flex flex-col">
-//       {/* <button
-//         onClick={() => {signinHandler(auth, 'test@gmail.com', 'test123test456')}}
-//       >Login</button>
-//       <button onClick={() => {signoutHandler()}}>Logout</button> */}
-//       <SideBar />
-//     </div>
-//   );
-// }
-
-
-
+import { useEffect, useState } from "react"
+import useWebSocket from "../hooks/useWebSocket"
 
 import { AppSidebar } from "@/components/SideBar/app-sidebar"
 import {
@@ -54,6 +19,16 @@ import {
 } from "@/components/ui/sidebar"
 
 export default function Page() {
+  const userId = "user_1"
+  const { messages, sendMessage } = useWebSocket(userId)
+  
+  const [input, setInput] = useState("");
+
+  const handleSendMessage = () => {
+    sendMessage(input);
+    setInput("");
+  }
+  
   return (
     <SidebarProvider
       style={
@@ -80,11 +55,20 @@ export default function Page() {
           </Breadcrumb>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
-          {Array.from({ length: 24 }).map((_, index) => (
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type a message..."
+          />
+          <button onClick={handleSendMessage}>SEND</button>
+          {messages.map((message, index) => (
             <div
               key={index}
               className="aspect-video h-12 w-full rounded-lg bg-muted/50"
-            />
+            >
+              {message.content ? message.content : message}
+            </div>
           ))}
         </div>
       </SidebarInset>
