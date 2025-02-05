@@ -5,7 +5,6 @@ import { useState } from "react";
 
 export default function EmailLogin() {
   const loginHandler = async (auth: Auth, email: string, password: string) => {
-    console.log("SIGN IN")
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;

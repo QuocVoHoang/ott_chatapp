@@ -64,7 +64,6 @@ export default function PhoneLogin() {
   useEffect(() => {
     const hasEnteredAllDigits = otp.length === 6
     if (hasEnteredAllDigits) {
-      console.log("hasEnteredAllDigits", hasEnteredAllDigits)
       verifyOtp()
     }
   }, [otp])
@@ -87,7 +86,6 @@ export default function PhoneLogin() {
   }
 
   const requestOtp = async (e?: FormEvent<HTMLFormElement>) => {
-    console.log('requestOtp', phoneNumber)
     e?.preventDefault()
     setResendCountdown(60)
     startTransition(async () => {

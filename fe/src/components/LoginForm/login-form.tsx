@@ -28,7 +28,6 @@ export function LoginForm({
   ///////////////////////////////////////////////////////////////////////////////
 
   const loginHandler = async (auth: Auth, email: string, password: string) => {
-    console.log("SIGN IN")
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;

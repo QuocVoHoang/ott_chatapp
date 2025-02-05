@@ -4,19 +4,22 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface UserState {
   username: string;
   userEmail: string;
-  userPhotoUrl: string
+  userPhotoUrl: string;
+  userUid: string;
 }
 
 const initialState: UserState = {
   username: "",
   userEmail: "",
-  userPhotoUrl: ""
+  userPhotoUrl: "",
+  userUid: ""
 };
 
 interface UserInformationPayload {
   newUsername: string;
   newEmail: string;
   newPhotoUrl: string;
+  newUid: string;
 }
 
 const userSlice = createSlice({
@@ -27,6 +30,7 @@ const userSlice = createSlice({
       state.username = action.payload.newUsername
       state.userEmail = action.payload.newEmail
       state.userPhotoUrl = action.payload.newPhotoUrl
+      state.userUid = action.payload.newUid
     },
   },
 });

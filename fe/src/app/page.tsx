@@ -17,16 +17,19 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { RootState } from "@/lib/redux/store"
+import { useSelector } from "react-redux"
+import { Box, Button, Input } from "@mui/material"
+import SendIcon from '@mui/icons-material/Send';
 
 export default function Page() {
-  const userId = "user_1"
+  const userId = useSelector((state: RootState) => state.user.userUid)
   const { messages, sendMessage } = useWebSocket(userId)
-  
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState("")
 
   const handleSendMessage = () => {
-    sendMessage(input);
-    setInput("");
+    sendMessage(input)
+    setInput("")
   }
   
   return (
@@ -54,23 +57,60 @@ export default function Page() {
             </BreadcrumbList>
           </Breadcrumb>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type a message..."
-          />
-          <button onClick={handleSendMessage}>SEND</button>
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className="aspect-video h-12 w-full rounded-lg bg-muted/50"
+        <Box 
+          sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column"
+          }}
+        >
+          <Box
+            sx={{
+              height: "calc(100% - 80px)",
+              backgroundColor: "#81a7e6"
+            }}
+          >
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className="aspect-video h-12 w-full rounded-lg bg-muted/50 mt-2"
+              >
+                {message.content ? message.content : message}
+              </div>
+            ))}
+          </Box>
+          <Box
+            sx={{
+              width: "100%",
+              height: "80px",
+              backgroundColor: "#e6d081",
+              display: "flex",
+              paddingX: "50px"
+            }}
+          >
+            <Input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type a message..."
+              sx={{
+                width: "calc(100% - 100px)",
+                height: "60px"
+              }}
+            />
+            <Button 
+              sx={{
+                width: "100px",
+                backgroundColor: "#ce81e6"
+              }}
+              onClick={handleSendMessage}
             >
-              {message.content ? message.content : message}
-            </div>
-          ))}
-        </div>
+              <SendIcon/>
+            </Button>
+            
+          </Box>
+        </Box>
       </SidebarInset>
     </SidebarProvider>
   )

@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+
 import { ArchiveX, Command, File, Inbox, Send, Trash2 } from "lucide-react"
 
 
@@ -21,50 +21,62 @@ import { Contact } from 'lucide-react';
 import { NavUser } from "./nav-user"
 import { Label } from "../ui/label"
 import { Switch } from "../ui/switch"
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/redux/store";
+import React, { useEffect, useState } from "react";
 
 
-// This is sample data
-const data = {
-  navMain: [
-    {
-      title: "Inbox",
-      url: "#",
-      icon: Inbox,
-      isActive: true,
-    },
-    {
-      title: "Contact",
-      url: "#",
-      icon: Contact,
-      isActive: false,
-    }
-  ],
-  mails: [
-    {
-      name: "William Smith",
-      email: "williamsmith@example.com",
-      subject: "Meeting Tomorrow",
-      date: "09:34 AM",
-      teaser:
-        "Hi team, just a reminder about our meeting tomorrow at 10 AM.\nPlease come prepared with your project updates.",
-    },
-    {
-      name: "Alice Smith",
-      email: "alicesmith@example.com",
-      subject: "Re: Project Update",
-      date: "Yesterday",
-      teaser:
-        "Thanks for the update. The progress looks great so far.\nLet's schedule a call to discuss the next steps.",
-    }
-  ],
-}
+const navMain = [
+  {
+    title: "Inbox",
+    icon: Inbox,
+    isActive: true,
+  },
+  {
+    title: "Contact",
+    icon: Contact,
+    isActive: false,
+  }
+]
+
+const mailsSample = [
+  {
+    name: "William Smith",
+    email: "williamsmith@example.com",
+    subject: "Meeting Tomorrow",
+    date: "09:34 AM",
+    teaser:
+      "Hi team, just a reminder about our meeting tomorrow at 10 AM.\nPlease come prepared with your project updates.",
+  },
+  {
+    name: "Alice Smith",
+    email: "alicesmith@example.com",
+    subject: "Re: Project Update",
+    date: "Yesterday",
+    teaser:
+      "Thanks for the update. The progress looks great so far.\nLet's schedule a call to discuss the next steps.",
+  }
+]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  // Note: I'm using state to show active item.
-  // IRL you should use the url/router.
-  const [activeItem, setActiveItem] = React.useState(data.navMain[0])
-  const [mails, setMails] = React.useState(data.mails)
+  const [activeItem, setActiveItem] = useState(navMain[0])
+  const [conversations, setConversations] = useState<any[]>()
   const { setOpen } = useSidebar()
+
+  const userId = useSelector((state: RootState) => state.user.userUid)
+
+  const getUserConversations = async() => {
+    if(userId) {
+      const response = await axios.get(`http://127.0.0.1:8000/conversation/user/${userId}`)
+      console.log('all conver', response.data)
+      setConversations(response.data)
+    }
+  }
+
+  useEffect(() => {
+    getUserConversations()
+  }, [userId])
 
   return (
     <Sidebar
@@ -72,9 +84,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       className="overflow-hidden [&>[data-sidebar=sidebar]]:flex-row"
       {...props}
     >
-      {/* This is the first sidebar */}
-      {/* We disable collapsible and adjust width to icon. */}
-      {/* This will make the sidebar appear as icons. */}
       <Sidebar
         collapsible="none"
         className="!w-[calc(var(--sidebar-width-icon)_+_1px)] border-r"
@@ -96,7 +105,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroup>
             <SidebarGroupContent className="px-1.5 md:px-0">
               <SidebarMenu>
-                {data.navMain.map((item) => (
+                {navMain.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       tooltip={{
@@ -104,14 +113,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         hidden: false,
                       }}
                       onClick={() => {
-                        setActiveItem(item)
-                        const mail = data.mails.sort(() => Math.random() - 0.5)
-                        setMails(
-                          mail.slice(
-                            0,
-                            Math.max(5, Math.floor(Math.random() * 10) + 1)
-                          )
-                        )
+                        // setActiveItem(item)
+                        
                         setOpen(true)
                       }}
                       isActive={activeItem.title === item.title}
@@ -131,8 +134,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarFooter>
       </Sidebar>
 
-      {/* This is the second sidebar */}
-      {/* We disable collapsible and let it fill remaining space */}
       <Sidebar collapsible="none" className="hidden flex-1 md:flex">
         <SidebarHeader className="gap-3.5 border-b p-4">
           <div className="flex w-full items-center justify-between">
@@ -149,19 +150,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarContent>
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
-              {mails.map((mail) => (
+              {conversations?.map((conversation) => (
                 <a
                   href="#"
-                  key={mail.email}
+                  key={conversation._id}
                   className="flex flex-col items-start gap-2 whitespace-nowrap border-b p-4 text-sm leading-tight last:border-b-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 >
-                  <div className="flex w-full items-center gap-2">
-                    <span>{mail.name}</span>{" "}
-                    <span className="ml-auto text-xs">{mail.date}</span>
-                  </div>
-                  <span className="font-medium">{mail.subject}</span>
+                  <span className="font-medium">{conversation.name}</span>
                   <span className="line-clamp-2 w-[260px] whitespace-break-spaces text-xs">
-                    {mail.teaser}
+                    TEASER
                   </span>
                 </a>
               ))}

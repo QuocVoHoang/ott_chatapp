@@ -10,14 +10,13 @@ interface IMessage {
 }
 
 const useWebSocket = (userId: string) => {
-  const url = `ws://localhost:8000/ws/${userId}`
+  const url = `ws://localhost:8000/message/ws/${userId}`
   const [events, setEvents] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
 
   const getMongoMessages = async() => {
-    const response = await axios.get(`http://127.0.0.1:8000/messages`);
+    const response = await axios.get(`http://127.0.0.1:8000/message/`);
     setMessages(response.data)
-    console.log(response.data)
   }
   useEffect(() => {
     getMongoMessages()

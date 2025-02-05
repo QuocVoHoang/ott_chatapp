@@ -12,7 +12,6 @@ export function SignupForm({
   ...props
 }: React.ComponentProps<"div">) {
   const registerUser = async(auth: Auth, email: string, password: string) => {
-    console.log("SIGN UP")
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user

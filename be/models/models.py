@@ -1,14 +1,41 @@
 from pydantic import BaseModel, Field
+from typing import List, Optional, Union
 from datetime import datetime
-from typing import Optional
-import uuid
+from bson import ObjectId
+from enum import Enum
+
+class MessageType(str, Enum):
+  text = "text"
+  image = "image"
+  file = "file"
+  video = "video"
+
+class PyObjectId(str):
+  @classmethod
+  def __get_validators__(cls):
+    yield cls.validate
+
+  @classmethod
+  def validate(cls, v):
+    if not ObjectId.is_valid(v):
+      raise ValueError("Invalid ObjectId")
+    return str(v)
+
+
+class Conversation(BaseModel):
+  name: str
+  participants: List[str]
+  created_at: datetime = Field(default_factory=datetime.utcnow)
+  updated_at: datetime = Field(default_factory=datetime.utcnow)
+
 
 class Message(BaseModel):
-  sender_id: str
-  receiver_id: str
+  conversation_id: PyObjectId
+  type: MessageType
+  sender: str
   content: str
   timestamp: datetime = Field(default_factory=datetime.utcnow)
 
-class User(BaseModel):
-    username: str
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+class ConversationCreate(BaseModel):
+  name: str
+  participants: List[str]
