@@ -30,6 +30,7 @@
     "clsx": "^2.1.1",
     "cookies-next": "^5.1.0",
     "firebase": "^11.2.0",
+    "firebase-admin": "^13.0.2",
     "input-otp": "^1.4.2",
     "install": "^0.13.0",
     "lucide-react": "^0.473.0",

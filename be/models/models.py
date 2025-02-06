@@ -25,6 +25,7 @@ class PyObjectId(str):
 class Conversation(BaseModel):
   name: str
   participants: List[str]
+  conversation_picture: str
   created_at: datetime = Field(default_factory=datetime.utcnow)
   updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -34,8 +35,18 @@ class Message(BaseModel):
   type: MessageType
   sender: str
   content: str
-  timestamp: datetime = Field(default_factory=datetime.utcnow)
+  created_at: datetime = Field(default_factory=datetime.utcnow)
+  updated_at: datetime = Field(default_factory=datetime.utcnow)
 
+
+##############################
 class ConversationCreate(BaseModel):
   name: str
   participants: List[str]
+  
+class TextMessageCreate(BaseModel):
+  conversation_id: str
+  type: str = "text"
+  sender: str
+  content: str
+  

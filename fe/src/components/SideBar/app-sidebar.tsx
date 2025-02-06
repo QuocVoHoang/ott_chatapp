@@ -24,7 +24,8 @@ import { Switch } from "../ui/switch"
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/redux/store";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Box } from "@mui/material";
 
 
 const navMain = [
@@ -59,7 +60,10 @@ const mailsSample = [
   }
 ]
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
+  setCurrentConversationId: (id: string) => void
+}
+export function AppSidebar({ setCurrentConversationId, ...props }: AppSidebarProps) {
   const [activeItem, setActiveItem] = useState(navMain[0])
   const [conversations, setConversations] = useState<any[]>()
   const { setOpen } = useSidebar()
@@ -69,7 +73,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const getUserConversations = async() => {
     if(userId) {
       const response = await axios.get(`http://127.0.0.1:8000/conversation/user/${userId}`)
-      console.log('all conver', response.data)
       setConversations(response.data)
     }
   }
@@ -151,16 +154,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
               {conversations?.map((conversation) => (
-                <a
-                  href="#"
+                <div
                   key={conversation._id}
-                  className="flex flex-col items-start gap-2 whitespace-nowrap border-b p-4 text-sm leading-tight last:border-b-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  className="flex flex-col items-start gap-2 whitespace-nowrap border-b p-4 text-sm leading-tight last:border-b-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer"
+                  onClick={() => {
+                    setCurrentConversationId(conversation._id)
+                  }}
                 >
                   <span className="font-medium">{conversation.name}</span>
                   <span className="line-clamp-2 w-[260px] whitespace-break-spaces text-xs">
                     TEASER
                   </span>
-                </a>
+                </div>
               ))}
             </SidebarGroupContent>
           </SidebarGroup>

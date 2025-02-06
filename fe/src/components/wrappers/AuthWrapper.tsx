@@ -35,7 +35,6 @@ export default function AuthWrapper({children}:{children: React.ReactNode}){
           newPhotoUrl: user.photoURL ? user.photoURL : "https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png",
           newUid: user.uid
         }))
-        console.log('user', user)
         router.push('/')
       } else if (!user && pathname != '/signin' && pathname != '/signup') {
         router.push('/signin')
